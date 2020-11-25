@@ -21,18 +21,27 @@ function App() {
 	};
 
 	const background = (w) => {
-		let wthr = w.weather[0].main;
+		let wthr = w.weather[0].main.toLowerCase();
 		let temp = w.main.temp;
-		if (wthr === 'Clear' && temp < 45.1) return 'app cool-clear';
-		else if (wthr === 'Clear' && temp > 45.1 && temp < 89.9)
-			return 'app warm-clear';
-		else if (wthr === 'Clear' && temp > 89.9) return 'app hot-clear';
-		else if (wthr === 'Clouds') return 'app clouds';
-		else if (wthr === 'Rain') return 'app rain';
-		else if (wthr === 'Thunderstorm') return 'app storm';
-		else if (wthr === 'Snow') return 'app snow';
-		else if (wthr === 'Mist') return 'app mist';
-		else return 'app';
+
+		switch (wthr) {
+			case 'clear':
+				if (temp <= 45) return 'app cool-clear';
+				else if (temp >= 90) return 'app hot-clear';
+				else return 'app warm-clear';
+			case 'clouds':
+				return 'app clouds';
+			case 'rain':
+				return 'app rain';
+			case 'thunderstorm':
+				return 'app storm';
+			case 'snow':
+				return 'app snow';
+			case 'mist':
+				return 'app mist';
+			default:
+				return 'app';
+		}
 	};
 
 	let date = String(new window.Date());
@@ -67,10 +76,19 @@ function App() {
 							<div className="temp">{Math.round(weather.main.temp)}°F</div>
 							<div className="weather">{weather.weather[0].main}</div>
 						</div>
+						<div className="attribution">
+							<a href="https://www.vecteezy.com/free-vector/cloud">
+								Cloud Vectors by Vecteezy
+							</a>
+						</div>
 					</div>
 				) : (
 					<div className="welcome-box">
 						<div className="welcome">Welcome to Gabes Weather Application</div>
+						<div className="attribution">
+							<p>Attributes by </p>
+							<a href="https://www.vecteezy.com/free-vector/cloud">Vecteezy</a>
+						</div>
 					</div>
 				)}
 			</main>

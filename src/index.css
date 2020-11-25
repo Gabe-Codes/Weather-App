@@ -138,3 +138,27 @@ main {
 	text-align: center;
 	text-shadow: 3px 3px rgba(50, 50, 70, 0.5);
 }
+
+.attribution {
+	color: #fff;
+	text-align: center;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 0;
+}
+
+.attribution a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.attribution a:hover,
+.attribution a:focus {
+	text-decoration: underline;
+}
+
+.attribution p {
+	display: inline;
+}
