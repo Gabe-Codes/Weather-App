@@ -31,6 +31,7 @@ function App() {
 		else if (wthr === 'Rain') return 'app rain';
 		else if (wthr === 'Thunderstorm') return 'app storm';
 		else if (wthr === 'Snow') return 'app snow';
+		else if (wthr === 'Mist') return 'app mist';
 		else return 'app';
 	};
 
@@ -68,7 +69,9 @@ function App() {
 						</div>
 					</div>
 				) : (
-					''
+					<div className="welcome-box">
+						<div className="welcome">Welcome to Gabes Weather Application</div>
+					</div>
 				)}
 			</main>
 		</div>
