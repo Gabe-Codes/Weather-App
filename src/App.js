@@ -20,17 +20,27 @@ function App() {
 		}
 	};
 
+	const background = (w) => {
+		let wthr = w.weather[0].main;
+		let temp = w.main.temp;
+		if (wthr === 'Clear' && temp < 45.1) return 'app cool-clear';
+		else if (wthr === 'Clear' && temp > 45.1 && temp < 89.9)
+			return 'app warm-clear';
+		else if (wthr === 'Clear' && temp > 89.9) return 'app hot-clear';
+		else if (wthr === 'Clouds') return 'app clouds';
+		else if (wthr === 'Rain') return 'app rain';
+		else if (wthr === 'Thunderstorm') return 'app storm';
+		else if (wthr === 'Snow') return 'app snow';
+		else return 'app';
+	};
+
 	let date = String(new window.Date());
 	date = date.slice(0, 15);
 
 	return (
 		<div
 			className={
-				typeof weather.main != 'undefined'
-					? weather.main.temp > 60
-						? 'app warm'
-						: 'app'
-					: 'app'
+				typeof weather.main != 'undefined' ? background(weather) : 'app'
 			}
 		>
 			<main>

@@ -9,14 +9,36 @@ body {
 }
 
 .app {
-	background-image: url('./assests/cool.png');
+	background-image: url('./assests/title.jpg');
 	background-size: cover;
 	background-position: bottom;
 	transition: 0.4s ease-out;
 }
 
-.app.warm {
-	background-image: url('./assests/warm.png');
+.app.cool-clear {
+	background-image: url('./assests/cool-clear.jpg');
+}
+
+.app.warm-clear {
+	background-image: url('./assests/warm-clear.jpg');
+}
+
+.app.hot-clear {
+	background-image: url('./assests/hot-clear.jpg');
+}
+
+.app.clouds {
+	background-image: url('./assests/cloudy.jpg');
+}
+
+.app.rain {
+	background-image: url('./assests/rainy.jpg');
+}
+.app.storm {
+	background-image: url('./assests/storm.jpg');
+}
+.app.snow {
+	background-image: url('./assests/snowing.jpg');
 }
 
 main {
