@@ -5,13 +5,62 @@ const api = {
 	base: 'https://api.openweathermap.org/data/2.5/',
 };
 
+const timezones = {
+	'-43200': -12.0,
+	'-39600': -11.0,
+	'-36000': -10.0,
+	'-34200': -9.3,
+	'-32400': -9.0,
+	'-28800': -8.0,
+	'-25200': -7.0,
+	'-21600': -6.0,
+	'-18000': -5.0,
+	'-16200': -4.3,
+	'-14400': -4.0,
+	'-12600': -3.3,
+	'-10800': -3.0,
+	'-7200': -2.0,
+	'-3600': -1.0,
+	// '0': '0',
+	// '3600': 1.00,
+	// '7200': 0.00,
+	// '10800': 3.00,
+	// '12600': 3.30,
+	// '14400': 4.00,
+	// '16200': 4.30,
+	// '18000': 5.00,
+	// '19800': 5.30,
+	// '20700': 5.45,
+	// '21600': 6.00,
+	// '23400': 6.30,
+	// '25200': 7.00,
+	// '28800': 8.00,
+	// '32400': 9.00,
+	// '34200': 9.30,
+	// '36000': 10.00,
+	// '37800': 10.30,
+	// '39600': 11.00,
+	// '41400': 11.30,
+	// '43200': 12.00,
+	// '45900': 12.45,
+	// '46800': 13.00,
+	// '50400': 14.00,
+};
+
 export default class App extends Component {
 	constructor() {
 		super();
 		this.state = {
 			query: '',
 			weather: '',
-			date: String(new window.Date()).slice(0, 15),
+			date: new Date(),
+			coords: {
+				lat: 0,
+				lon: 0,
+			},
+			home: false,
+			units: 'imperial',
+			climate: '',
 		};
 	}
 
@@ -25,35 +74,54 @@ export default class App extends Component {
 
 	getUserLocation = (evt) => {
 		navigator.geolocation.getCurrentPosition((location) => {
-			let lat = location.coords.latitude;
-			let lon = location.coords.longitude;
+			this.setState({
+				coords: {
+					lat: location.coords.latitude,
+					lon: location.coords.longitude,
+				},
+				home: true,
+			});
 
 			fetch(
-				`${api.base}weather?lat=${lat}&lon=${lon}&units=imperial&APPID=${api.key}`
+				`${api.base}weather?lat=${this.state.coords.lat}&lon=${this.state.coords.lon}&units=imperial&APPID=${api.key}`
 			)
 				.then((res) => res.json())
 				.then((result) => {
-					this.setState({ query: '', weather: result });
+					this.setState({
+						query: '',
+						weather: result,
+						climate: result.weather[0].main.toLowerCase(),
+					});
 				});
 		});
 	};
 
 	search = (evt) => {
 		if (evt.key === 'Enter') {
+			this.setState({ home: false });
 			fetch(
 				`${api.base}weather?q=${this.state.query}&units=imperial&APPID=${api.key}`
 			)
 				.then((res) => res.json())
 				.then((result) => {
-					this.setState({ query: '', weather: result });
+					console.log(result);
+					if (result.cod === 200) {
+						this.setState({
+							query: '',
+							weather: result,
+							climate: result.weather[0].main.toLowerCase(),
+						});
+					} else {
+						this.setState({
+							query: '',
+							weather: result,
+						});
+					}
 				});
 		}
 	};
 
-	background = (w) => {
-		let wthr = w.weather[0].main.toLowerCase();
-		let temp = w.main.temp;
-
+	background = (wthr, temp) => {
 		switch (wthr) {
 			case 'clear':
 				if (temp <= 45) return 'app cool-clear';
@@ -74,12 +142,37 @@ export default class App extends Component {
 		}
 	};
 
+	weatherAnimation = (climate) => {
+		switch (climate) {
+			case 'clear':
+				return 'weather-animation clear-ani';
+			case 'clouds':
+				return 'weather-animation clouds-ani';
+			case 'rain':
+				return 'weather-animation rain-ani';
+			case 'thunderstorm':
+				return 'weather-animation storm-ani';
+			case 'snow':
+				return 'weather-animation snow-ani';
+			case 'mist':
+				return 'weather-animation mist-ani';
+			default:
+				return '';
+		}
+	};
+
+	locationTimeCalc = (offset) => {
+		let utc =
+			this.state.date.getTime() + this.state.date.getTimezoneOffset() * 60000;
+		return new Date(utc + 3600000 * timezones[this.state.weather.timezone]);
+	};
+
 	render() {
 		return (
 			<div
 				className={
 					typeof this.state.weather.main != 'undefined'
-						? this.background(this.state.weather)
+						? this.background(this.state.climate, this.state.weather.main.temp)
 						: 'app'
 				}
 			>
@@ -93,9 +186,36 @@ export default class App extends Component {
 							value={this.state.query}
 							onKeyPress={this.search}
 						/>
+						<i class="material-icons" onClick={this.getUserLocation}>
+							{this.state.home === false ? 'location_searching' : 'gps_fixed'}
+						</i>
 					</div>
-					<div className="user-location-box">
-						<button onClick={this.getUserLocation}>My Location</button>
+					<div className="unit-switch-box">
+						<div className="unit-switch">
+							<input
+								type="radio"
+								name="unit_switcher"
+								id="imperial"
+								className="switch-input switch-input-2"
+								value="imperial"
+								onClick={(e) => this.setState({ units: 'imperial' })}
+							></input>
+							<label for="imperial" class="left">
+								°F
+							</label>
+							<input
+								type="radio"
+								name="unit_switcher"
+								id="metric"
+								className="switch-input"
+								value="metric"
+								onClick={(e) => this.setState({ units: 'metric' })}
+							/>
+							<label for="metric" class="right">
+								°C
+							</label>
+							<span className="switch-selection"></span>
+						</div>
 					</div>
 					{typeof this.state.weather.main != 'undefined' ? (
 						<div>
@@ -103,19 +223,31 @@ export default class App extends Component {
 								<div className="location">
 									{this.state.weather.name}, {this.state.weather.sys.country}
 								</div>
-								<div className="date">{this.state.date}</div>
+								<div className="date">
+									{String(this.state.date).slice(0, 15)}
+									{/* {this.locationTimeCalc('')} */}
+								</div>
 							</div>
 							<div className="weather-box">
 								<div className="temp">
-									{Math.round(this.state.weather.main.temp)}°F
+									{this.state.units === 'imperial'
+										? Math.round(this.state.weather.main.temp)
+										: Math.round((this.state.weather.main.temp - 32) * (5 / 9))}
+									{this.state.units === 'imperial' ? '°F' : '°C'}
 								</div>
-								<div className="weather">
-									{this.state.weather.weather[0].main}
-								</div>
+								<div className="weather">{this.state.climate}</div>
+								<div
+									className={this.weatherAnimation(this.state.climate)}
+								></div>
 							</div>
 							<div className="attribution">
+								<p>Attributes by </p>
 								<a href="https://www.vecteezy.com/free-vector/cloud">
-									Cloud Vectors by Vecteezy
+									Vecteezy
+								</a>
+								<p> and </p>
+								<a href="https://www.amcharts.com/free-animated-svg-weather-icons/">
+									amCharts
 								</a>
 							</div>
 						</div>
@@ -128,6 +260,10 @@ export default class App extends Component {
 								<p>Attributes by </p>
 								<a href="https://www.vecteezy.com/free-vector/cloud">
 									Vecteezy
+								</a>
+								<p> and </p>
+								<a href="https://www.amcharts.com/free-animated-svg-weather-icons/">
+									amCharts
 								</a>
 							</div>
 						</div>

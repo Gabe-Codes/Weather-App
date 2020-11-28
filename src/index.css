@@ -34,9 +34,11 @@ body {
 .app.rain {
 	background-image: url('./assests/rainy.jpg');
 }
+
 .app.storm {
 	background-image: url('./assests/storm.jpg');
 }
+
 .app.snow {
 	background-image: url('./assests/snowing.jpg');
 }
@@ -56,19 +58,10 @@ main {
 }
 
 .search-box {
+	position: relative;
+
 	width: 100%;
 	margin: 0 0 75px;
-}
-
-.search-box .search-bar {
-	display: block;
-	width: 100%;
-	padding: 15px;
-
-	appearance: none;
-	background: none;
-	border: none;
-	outline: none;
 
 	background-color: rgba(255, 255, 255, 0.5);
 	border-radius: 0px 0px 16px 16px;
@@ -76,14 +69,32 @@ main {
 
 	box-shadow: 0px 5px rgba(0, 0, 0, 0.2);
 
-	color: #313131;
-	font-size: 20px;
-
 	transition: 0.4s ease;
 }
 
-.search-box .search-bar:focus {
+.search-box .search-bar {
+	display: inline;
+	width: 90%;
+	padding: 15px;
+
+	appearance: none;
+	background: none;
+	border: none;
+	outline: none;
+
+	color: #313131;
+	font-size: 20px;
+}
+
+.search-box:focus {
 	background-color: rgba(255, 255, 255, 0.75);
+}
+
+.search-box i {
+	position: absolute;
+	top: 12.5px;
+
+	color: #313131;
 }
 
 .location-box .location {
@@ -103,6 +114,9 @@ main {
 }
 
 .weather-box {
+	display: flex;
+	flex-direction: column;
+	height: 68vh;
 	text-align: center;
 }
 
@@ -129,6 +143,42 @@ main {
 	font-size: 48px;
 	font-weight: 700;
 	text-shadow: 3px 3px rgba(50, 50, 70, 0.5);
+}
+
+.weather-box .weather-animation {
+	display: flex;
+	flex-grow: 1;
+	flex: auto;
+	margin: 0 auto;
+	width: 100%;
+
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 55vh;
+}
+
+.weather-box .clear-ani {
+	background-image: url('./assests/day-clear.svg');
+}
+
+.weather-box .clouds-ani {
+	background-image: url('./assests/cloudy-animation.svg');
+}
+
+.weather-box .mist-ani {
+	background-image: url('./assests/mist-animation.svg');
+}
+
+.weather-box .rain-ani {
+	background-image: url('./assests/rain-animation.svg');
+}
+
+.weather-box .thunderstorm-ani {
+	background-image: url('./assests/thunder-animation.svg');
+}
+
+.weather-box .snow-ani {
+	background-image: url('./assests/snowy-animation.svg');
 }
 
 .welcome-box .welcome {
@@ -162,3 +212,27 @@ main {
 .attribution p {
 	display: inline;
 }
+
+/* .units-switch-box {
+	box-sizing: border-box;
+	display: block;
+
+	border-color: #78cbbf;
+	font-size: 10px;
+	height: 26px;
+	line-height: 26px;
+	border-radius: 4pt;
+	border: 1px solid rgba(72, 72, 74, 0.5);
+	cursor: pointer;
+	position: relative;
+}
+
+.units-switch-box .units-switch {
+	box-sizing: border-box;
+	display: block;
+}
+
+.units-switch-box .units-switch .switch-input {
+	position: absolute;
+	opacity: 0;
+} */
