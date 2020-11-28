@@ -23,7 +23,7 @@ const timezones = {
 	'-3600': -1.0,
 	// '0': '0',
 	// '3600': 1.00,
-	// '7200': 0.00,
+	// '7200': 2.00,
 	// '10800': 3.00,
 	// '12600': 3.30,
 	// '14400': 4.00,
@@ -53,7 +53,7 @@ export default class App extends Component {
 		this.state = {
 			query: '',
 			weather: '',
-			date: new Date(),
+			date: '',
 			coords: {
 				lat: 0,
 				lon: 0,
@@ -87,10 +87,12 @@ export default class App extends Component {
 			)
 				.then((res) => res.json())
 				.then((result) => {
+					let d = String(new Date());
 					this.setState({
 						query: '',
 						weather: result,
 						climate: result.weather[0].main.toLowerCase(),
+						date: d,
 					});
 				});
 		});
@@ -106,10 +108,12 @@ export default class App extends Component {
 				.then((result) => {
 					console.log(result);
 					if (result.cod === 200) {
+						let d = this.locationDateCalc(result);
 						this.setState({
 							query: '',
 							weather: result,
 							climate: result.weather[0].main.toLowerCase(),
+							date: d,
 						});
 					} else {
 						this.setState({
@@ -161,10 +165,14 @@ export default class App extends Component {
 		}
 	};
 
-	locationTimeCalc = (offset) => {
-		let utc =
-			this.state.date.getTime() + this.state.date.getTimezoneOffset() * 60000;
-		return new Date(utc + 3600000 * timezones[this.state.weather.timezone]);
+	locationDateCalc = (loc) => {
+		let d = new Date();
+
+		let utc = d.getTime() + d.getTimezoneOffset() * 60000;
+
+		let locDate = new Date(utc + 3600000 * timezones[loc.timezone]);
+
+		return String(locDate);
 	};
 
 	render() {
@@ -223,10 +231,7 @@ export default class App extends Component {
 								<div className="location">
 									{this.state.weather.name}, {this.state.weather.sys.country}
 								</div>
-								<div className="date">
-									{String(this.state.date).slice(0, 15)}
-									{/* {this.locationTimeCalc('')} */}
-								</div>
+								<div className="date">{this.state.date.slice(0, 15)}</div>
 							</div>
 							<div className="weather-box">
 								<div className="temp">
