@@ -157,8 +157,12 @@ main {
 	background-size: 55vh;
 }
 
-.weather-box .clear-ani {
+.weather-box .clear-day-ani {
 	background-image: url('./assests/day-clear.svg');
+}
+
+.weather-box .clear-night-ani {
+	background-image: url('./assests/night-clear.svg');
 }
 
 .weather-box .clouds-ani {
