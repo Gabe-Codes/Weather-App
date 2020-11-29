@@ -176,6 +176,31 @@ export default class App extends Component {
 			return Math.round((this.state.weather.main.temp - 32) * (5 / 9)) + '°C';
 	};
 
+	getTextWidth = (text, font) => {
+		let canvas =
+			this.getTextWidth.canvas ||
+			(this.getTextWidth.canvas = document.createElement('canvas'));
+
+		let context = canvas.getContext('2d');
+
+		context.font = font;
+
+		let metrics = context.measureText(text);
+
+		console.log(metrics.width);
+		return metrics.width;
+	};
+
+	sizeCheck = () => {
+		let impTemp = String(Math.round(this.state.weather.main.temp)) + '°F';
+		let metTemp =
+			String(Math.round((this.state.weather.main.temp - 32) * (5 / 9))) + '°C';
+
+		return this.state.isImp === true
+			? this.getTextWidth(impTemp, '900 102pt montseratt')
+			: this.getTextWidth(metTemp, '900 102pt montseratt');
+	};
+
 	render() {
 		return (
 			<div
@@ -215,12 +240,13 @@ export default class App extends Component {
 											? this.setState({ isImp: false })
 											: this.setState({ isImp: true })
 									}
+									style={{ width: this.sizeCheck() + 'px' }}
 								>
 									<TextTransition
 										text={this.switchUnits()}
 										springConfig={presets.slow}
 										noOverflow={true}
-										// direction={'down'}
+										direction={this.state.isImp === true ? 'down' : 'up'}
 									/>
 								</div>
 								<div className="weather">{this.state.climate}</div>

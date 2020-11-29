@@ -97,6 +97,10 @@ main {
 	color: #313131;
 }
 
+.search-box i:hover {
+	cursor: pointer;
+}
+
 .location-box .location {
 	color: #fff;
 	font-size: 32px;
@@ -123,10 +127,10 @@ main {
 .weather-box .temp {
 	position: relative;
 	display: inline-block;
-	margin: 30px auto;
+	margin: 15px auto;
 	background-color: rgba(255, 255, 255, 0.2);
 	border-radius: 16px;
-
+	
 	padding: 15px 25px;
 
 	color: #fff;
@@ -137,8 +141,12 @@ main {
 	text-align: center;
 	box-shadow: 3px 6px rgba(0, 0, 0, 0.2);
 
-	background-size: 100% 100%;
-	transition: 1s ease-out;
+	transition: width 0.6s ease;
+	transform-origin: center;
+}
+
+.weather-box .temp:hover {
+	cursor: pointer;
 }
 
 .weather-box .weather {
