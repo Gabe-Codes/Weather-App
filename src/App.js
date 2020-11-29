@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import TextTransition, { presets } from 'react-text-transition';
 
 const api = {
 	key: '6ef9a57a6186cdb062cac9bdef08165c',
@@ -54,12 +55,8 @@ export default class App extends Component {
 			query: '',
 			weather: '',
 			date: '',
-			coords: {
-				lat: 0,
-				lon: 0,
-			},
 			home: false,
-			units: 'imperial',
+			isImp: true,
 			climate: '',
 		};
 	}
@@ -74,16 +71,11 @@ export default class App extends Component {
 
 	getUserLocation = (evt) => {
 		navigator.geolocation.getCurrentPosition((location) => {
-			this.setState({
-				coords: {
-					lat: location.coords.latitude,
-					lon: location.coords.longitude,
-				},
-				home: true,
-			});
-
+			let lat = location.coords.latitude;
+			let lon = location.coords.longitude;
+			console.log(location);
 			fetch(
-				`${api.base}weather?lat=${this.state.coords.lat}&lon=${this.state.coords.lon}&units=imperial&APPID=${api.key}`
+				`${api.base}weather?lat=${lat}&lon=${lon}&units=imperial&APPID=${api.key}`
 			)
 				.then((res) => res.json())
 				.then((result) => {
@@ -93,6 +85,7 @@ export default class App extends Component {
 						weather: result,
 						climate: result.weather[0].main.toLowerCase(),
 						date: d,
+						home: true,
 					});
 				});
 		});
@@ -106,7 +99,6 @@ export default class App extends Component {
 			)
 				.then((res) => res.json())
 				.then((result) => {
-					console.log(result);
 					if (result.cod === 200) {
 						let d = this.locationDateCalc(result);
 						this.setState({
@@ -177,6 +169,13 @@ export default class App extends Component {
 		return String(locDate);
 	};
 
+	switchUnits = () => {
+		if (this.state.isImp === true)
+			return Math.round(this.state.weather.main.temp) + '°F';
+		else
+			return Math.round((this.state.weather.main.temp - 32) * (5 / 9)) + '°C';
+	};
+
 	render() {
 		return (
 			<div
@@ -196,36 +195,9 @@ export default class App extends Component {
 							value={this.state.query}
 							onKeyPress={this.search}
 						/>
-						<i class="material-icons" onClick={this.getUserLocation}>
+						<i className="material-icons" onClick={this.getUserLocation}>
 							{this.state.home === false ? 'location_searching' : 'gps_fixed'}
 						</i>
-					</div>
-					<div className="unit-switch-box">
-						<div className="unit-switch">
-							<input
-								type="radio"
-								name="unit_switcher"
-								id="imperial"
-								className="switch-input switch-input-2"
-								value="imperial"
-								onClick={(e) => this.setState({ units: 'imperial' })}
-							></input>
-							<label for="imperial" class="left">
-								°F
-							</label>
-							<input
-								type="radio"
-								name="unit_switcher"
-								id="metric"
-								className="switch-input"
-								value="metric"
-								onClick={(e) => this.setState({ units: 'metric' })}
-							/>
-							<label for="metric" class="right">
-								°C
-							</label>
-							<span className="switch-selection"></span>
-						</div>
 					</div>
 					{typeof this.state.weather.main != 'undefined' ? (
 						<div>
@@ -236,11 +208,20 @@ export default class App extends Component {
 								<div className="date">{this.state.date.slice(0, 15)}</div>
 							</div>
 							<div className="weather-box">
-								<div className="temp">
-									{this.state.units === 'imperial'
-										? Math.round(this.state.weather.main.temp)
-										: Math.round((this.state.weather.main.temp - 32) * (5 / 9))}
-									{this.state.units === 'imperial' ? '°F' : '°C'}
+								<div
+									className="temp"
+									onClick={(e) =>
+										this.state.isImp === true
+											? this.setState({ isImp: false })
+											: this.setState({ isImp: true })
+									}
+								>
+									<TextTransition
+										text={this.switchUnits()}
+										springConfig={presets.slow}
+										noOverflow={true}
+										// direction={'down'}
+									/>
 								</div>
 								<div className="weather">{this.state.climate}</div>
 								<div

@@ -136,6 +136,9 @@ main {
 	text-shadow: 3px 6px rgba(50, 50, 70, 0.5);
 	text-align: center;
 	box-shadow: 3px 6px rgba(0, 0, 0, 0.2);
+
+	background-size: 100% 100%;
+	transition: 1s ease-out;
 }
 
 .weather-box .weather {
@@ -216,27 +219,3 @@ main {
 .attribution p {
 	display: inline;
 }
-
-/* .units-switch-box {
-	box-sizing: border-box;
-	display: block;
-
-	border-color: #78cbbf;
-	font-size: 10px;
-	height: 26px;
-	line-height: 26px;
-	border-radius: 4pt;
-	border: 1px solid rgba(72, 72, 74, 0.5);
-	cursor: pointer;
-	position: relative;
-}
-
-.units-switch-box .units-switch {
-	box-sizing: border-box;
-	display: block;
-}
-
-.units-switch-box .units-switch .switch-input {
-	position: absolute;
-	opacity: 0;
-} */
