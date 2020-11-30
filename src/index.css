@@ -90,7 +90,7 @@ main {
 	background-color: rgba(255, 255, 255, 0.75);
 }
 
-.search-box i {
+.search-box .current-loc {
 	position: absolute;
 	top: 12.5px;
 
@@ -107,6 +107,13 @@ main {
 	font-weight: 500;
 	text-align: center;
 	text-shadow: 3px 3px rgba(50, 50, 70, 0.5);
+}
+
+.location-box .location .favorited-loc {
+	color: yellow;
+	text-shadow: none;
+
+	cursor: pointer;
 }
 
 .location-box .date {
@@ -130,7 +137,7 @@ main {
 	margin: 15px auto;
 	background-color: rgba(255, 255, 255, 0.2);
 	border-radius: 16px;
-	
+
 	padding: 15px 25px;
 
 	color: #fff;

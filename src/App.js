@@ -1,51 +1,10 @@
 import React, { Component } from 'react';
 import TextTransition, { presets } from 'react-text-transition';
+import { timezones } from './timezones';
 
 const api = {
 	key: '6ef9a57a6186cdb062cac9bdef08165c',
 	base: 'https://api.openweathermap.org/data/2.5/',
-};
-
-const timezones = {
-	'-43200': -12.0,
-	'-39600': -11.0,
-	'-36000': -10.0,
-	'-34200': -9.3,
-	'-32400': -9.0,
-	'-28800': -8.0,
-	'-25200': -7.0,
-	'-21600': -6.0,
-	'-18000': -5.0,
-	'-16200': -4.3,
-	'-14400': -4.0,
-	'-12600': -3.3,
-	'-10800': -3.0,
-	'-7200': -2.0,
-	'-3600': -1.0,
-	// '0': '0',
-	// '3600': 1.0,
-	// '7200': 2.0,
-	// '10800': 3.0,
-	// '12600': 3.3,
-	// '14400': 4.0,
-	// '16200': 4.3,
-	// '18000': 5.0,
-	// '19800': 5.3,
-	// '20700': 5.45,
-	// '21600': 6.0,
-	// '23400': 6.3,
-	// '25200': 7.0,
-	// '28800': 8.0,
-	// '32400': 9.0,
-	// '34200': 9.3,
-	// '36000': 10.0,
-	// '37800': 10.3,
-	// '39600': 11.0,
-	// '41400': 11.3,
-	// '43200': 12.0,
-	// '45900': 12.45,
-	// '46800': 13.0,
-	// '50400': 14.0,
 };
 
 export default class App extends Component {
@@ -58,12 +17,18 @@ export default class App extends Component {
 			home: false,
 			isImp: true,
 			climate: '',
+			favoriteLoc: localStorage.getItem('favLoc'),
+			favorited: false,
 		};
 	}
 
 	componentDidMount() {
 		try {
-			this.getUserLocation();
+			if (this.state.favoriteLoc === null) {
+				this.getUserLocation();
+			} else {
+				this.goFavorite();
+			}
 		} catch (err) {
 			console.log(err);
 		}
@@ -73,7 +38,6 @@ export default class App extends Component {
 		navigator.geolocation.getCurrentPosition((location) => {
 			let lat = location.coords.latitude;
 			let lon = location.coords.longitude;
-			console.log(location);
 			fetch(
 				`${api.base}weather?lat=${lat}&lon=${lon}&units=imperial&APPID=${api.key}`
 			)
@@ -89,6 +53,54 @@ export default class App extends Component {
 					});
 				});
 		});
+	};
+
+	favoriteLocation = (evt) => {
+		if (
+			this.state.favoriteLoc !==
+			this.state.weather.name + ', ' + this.state.weather.sys.country
+		) {
+			localStorage.setItem(
+				'favLoc',
+				this.state.weather.name + ', ' + this.state.weather.sys.country
+			);
+			this.setState({
+				favoriteLoc:
+					this.state.weather.name + ', ' + this.state.weather.sys.country,
+			});
+		} else {
+			localStorage.removeItem('favLoc');
+			this.setState({
+				favoriteLoc: null,
+			});
+		}
+	};
+
+	goFavorite = () => {
+		fetch(
+			`${api.base}weather?q=${this.state.favoriteLoc}&units=imperial&APPID=${api.key}`
+		)
+			.then((res) => res.json())
+			.then((result) => {
+				let d = this.locationDateCalc(result);
+				this.setState({
+					query: '',
+					weather: result,
+					climate: result.weather[0].main.toLowerCase(),
+					date: d,
+				});
+			});
+	};
+
+	checkIfFav = () => {
+		if (
+			this.state.favoriteLoc ===
+			this.state.weather.name + ', ' + this.state.weather.sys.country
+		) {
+			return 'star';
+		} else {
+			return 'star_border';
+		}
 	};
 
 	search = (evt) => {
@@ -187,12 +199,12 @@ export default class App extends Component {
 
 		let metrics = context.measureText(text);
 
-		console.log(metrics.width);
 		return metrics.width;
 	};
 
 	sizeCheck = () => {
 		let impTemp = String(Math.round(this.state.weather.main.temp)) + '°F';
+
 		let metTemp =
 			String(Math.round((this.state.weather.main.temp - 32) * (5 / 9))) + '°C';
 
@@ -220,7 +232,10 @@ export default class App extends Component {
 							value={this.state.query}
 							onKeyPress={this.search}
 						/>
-						<i className="material-icons" onClick={this.getUserLocation}>
+						<i
+							className="material-icons current-loc"
+							onClick={this.getUserLocation}
+						>
 							{this.state.home === false ? 'location_searching' : 'gps_fixed'}
 						</i>
 					</div>
@@ -228,7 +243,15 @@ export default class App extends Component {
 						<div>
 							<div className="location-box">
 								<div className="location">
-									{this.state.weather.name}, {this.state.weather.sys.country}
+									{this.state.weather.name},{' '}
+									{this.state.weather.sys.country + ' '}
+									<i
+										className="material-icons favorited-loc"
+										onClick={this.favoriteLocation}
+									>
+										{this.checkIfFav()}
+										{/* {this.state.favorited === false ? 'star_border' : 'star'} */}
+									</i>
 								</div>
 								<div className="date">{this.state.date.slice(0, 15)}</div>
 							</div>
