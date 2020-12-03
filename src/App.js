@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import TextTransition, { presets } from 'react-text-transition';
 import { timezones } from './timezones';
+import InfoModal from './components/InfoModal/InfoModal';
 
+// makes the openweather api easier to call
 const api = {
 	key: '6ef9a57a6186cdb062cac9bdef08165c',
 	base: 'https://api.openweathermap.org/data/2.5/',
@@ -15,25 +17,25 @@ export default class App extends Component {
 			weather: '',
 			date: '',
 			home: false,
-			isImp: true,
+			isImp: JSON.parse(localStorage.getItem('isImp')), // converts the cookie string to a boolean
 			climate: '',
-			favoriteLoc: localStorage.getItem('favLoc'),
+			favoriteLoc: localStorage.getItem('favLoc'), // sets the saved cookie favorite location
 			favorited: false,
 		};
 	}
 
+	// on launch goes to a users favorited or current location
 	componentDidMount() {
 		try {
-			if (this.state.favoriteLoc === null) {
-				this.getUserLocation();
-			} else {
-				this.goFavorite();
-			}
+			this.state.favoriteLoc === null
+				? this.getUserLocation()
+				: this.goFavorite();
 		} catch (err) {
 			console.log(err);
 		}
 	}
 
+	// gets users coordinates then fetchs the location
 	getUserLocation = (evt) => {
 		navigator.geolocation.getCurrentPosition((location) => {
 			let lat = location.coords.latitude;
@@ -55,6 +57,7 @@ export default class App extends Component {
 		});
 	};
 
+	// saves or removes users favorite as a local cookie
 	favoriteLocation = (evt) => {
 		if (
 			this.state.favoriteLoc !==
@@ -76,6 +79,7 @@ export default class App extends Component {
 		}
 	};
 
+	// fetchs the users favorite location
 	goFavorite = () => {
 		fetch(
 			`${api.base}weather?q=${this.state.favoriteLoc}&units=imperial&APPID=${api.key}`
@@ -92,6 +96,7 @@ export default class App extends Component {
 			});
 	};
 
+	// checks if the location on screen is favorited or not
 	checkIfFav = () => {
 		if (
 			this.state.favoriteLoc ===
@@ -103,6 +108,7 @@ export default class App extends Component {
 		}
 	};
 
+	// takes the users search input and fetchs with api
 	search = (evt) => {
 		if (evt.key === 'Enter') {
 			this.setState({ home: false });
@@ -129,6 +135,7 @@ export default class App extends Component {
 		}
 	};
 
+	// changes background image depending on weather and tempature
 	background = (wthr, temp) => {
 		switch (wthr) {
 			case 'clear':
@@ -150,6 +157,7 @@ export default class App extends Component {
 		}
 	};
 
+	// changes animated weather svg based on the currently displayed weather
 	weatherAnimation = (climate) => {
 		let time = parseInt(this.state.date.slice(16, 18));
 		switch (climate) {
@@ -171,6 +179,7 @@ export default class App extends Component {
 		}
 	};
 
+	// finds the searched locations date based off current user date and timezone
 	locationDateCalc = (loc) => {
 		let d = new Date();
 
@@ -181,6 +190,20 @@ export default class App extends Component {
 		return String(locDate);
 	};
 
+	// saves the users last/perfered tempature metric
+	setUnit = (evt) => {
+		if (this.state.isImp === true) {
+			localStorage.setItem('isImp', false);
+
+			this.setState({ isImp: false });
+		} else {
+			localStorage.setItem('isImp', true);
+
+			this.setState({ isImp: true });
+		}
+	};
+
+	// calculates and switches between fahrenheit and celsius
 	switchUnits = () => {
 		if (this.state.isImp === true)
 			return Math.round(this.state.weather.main.temp) + '°F';
@@ -188,6 +211,7 @@ export default class App extends Component {
 			return Math.round((this.state.weather.main.temp - 32) * (5 / 9)) + '°C';
 	};
 
+	// calculates the tempature text width
 	getTextWidth = (text, font) => {
 		let canvas =
 			this.getTextWidth.canvas ||
@@ -202,6 +226,7 @@ export default class App extends Component {
 		return metrics.width;
 	};
 
+	// calls to check the temp text width based on the current metric
 	sizeCheck = () => {
 		let impTemp = String(Math.round(this.state.weather.main.temp)) + '°F';
 
@@ -223,7 +248,8 @@ export default class App extends Component {
 				}
 			>
 				<main>
-					<div className="search-box">
+					<InfoModal />
+					<div id="search" className="search-box">
 						<input
 							type="text"
 							className="search-bar"
@@ -233,6 +259,7 @@ export default class App extends Component {
 							onKeyPress={this.search}
 						/>
 						<i
+							id="curr-loc"
 							className="material-icons current-loc"
 							onClick={this.getUserLocation}
 						>
@@ -246,23 +273,20 @@ export default class App extends Component {
 									{this.state.weather.name},{' '}
 									{this.state.weather.sys.country + ' '}
 									<i
+										id="fav-loc"
 										className="material-icons favorited-loc"
 										onClick={this.favoriteLocation}
 									>
 										{this.checkIfFav()}
-										{/* {this.state.favorited === false ? 'star_border' : 'star'} */}
 									</i>
 								</div>
 								<div className="date">{this.state.date.slice(0, 15)}</div>
 							</div>
 							<div className="weather-box">
 								<div
+									id="temp"
 									className="temp"
-									onClick={(e) =>
-										this.state.isImp === true
-											? this.setState({ isImp: false })
-											: this.setState({ isImp: true })
-									}
+									onClick={this.setUnit}
 									style={{ width: this.sizeCheck() + 'px' }}
 								>
 									<TextTransition

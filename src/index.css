@@ -2,6 +2,7 @@
 	margin: 0%;
 	padding: 0%;
 	box-sizing: border-box;
+	outline: 0 !important;
 }
 
 body {
@@ -92,9 +93,13 @@ main {
 
 .search-box .current-loc {
 	position: absolute;
-	top: 12.5px;
+	top: 10.5px;
+	right: 10px;
 
 	color: #313131;
+
+	border-radius: 20px;
+	padding: 2px;
 }
 
 .search-box i:hover {
@@ -114,6 +119,9 @@ main {
 	text-shadow: none;
 
 	cursor: pointer;
+
+	border-radius: 20px;
+	padding: 2px;
 }
 
 .location-box .date {

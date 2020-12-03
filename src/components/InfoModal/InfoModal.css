@@ -1,0 +1,40 @@
+.info {
+	position: absolute;
+	text-align: center;
+	display: none;
+}
+
+.info-toggle {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+
+	color: #fff;
+	cursor: pointer;
+}
+
+.info-fav {
+	top: 17vh;
+	right: 14vw;
+
+	color: yellow;
+}
+
+.info-loc {
+	top: 8vh;
+	right: 5vw;
+
+	color: lightgreen;
+}
+
+.info-met {
+	top: 30vh;
+	left: 8vw;
+
+	color: lightcoral;
+}
+
+.info-search {
+	top: 2.5vh;
+	left: 26vw;
+}
