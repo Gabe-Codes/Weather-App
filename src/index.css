@@ -11,41 +11,51 @@ body {
 
 .app {
 	background-image: url('./assests/title.jpg');
-	background-size: cover;
+	background-size: fill;
 	background-position: bottom;
+	background-repeat: no-repeat;
 	transition: 0.4s ease-out;
+	background-color: #530c87;
 }
 
 .app.cool-clear {
 	background-image: url('./assests/cool-clear.jpg');
+	background-color: #2458af;
 }
 
 .app.warm-clear {
 	background-image: url('./assests/warm-clear.jpg');
+	background-color: #8f63aa;
 }
 
 .app.hot-clear {
 	background-image: url('./assests/hot-clear.jpg');
+	background-color: #895641;
 }
 
 .app.clouds {
 	background-image: url('./assests/cloudy.jpg');
+	background-color: #0c324a;
 }
 
 .app.rain {
 	background-image: url('./assests/rainy.jpg');
+	background-color: #451b61;
 }
 
 .app.storm {
 	background-image: url('./assests/storm.jpg');
+	background-color: #034082;
 }
 
 .app.snow {
 	background-image: url('./assests/snowing.jpg');
+	background-color: #2caecb;
 }
 
 .app.mist {
 	background-image: url('./assests/mist.jpg');
+	background-color: #095258;
 }
 
 main {
@@ -62,7 +72,7 @@ main {
 	position: relative;
 
 	width: 100%;
-	margin: 0 0 75px;
+	margin: 0 auto 75px;
 
 	background-color: rgba(255, 255, 255, 0.5);
 	border-radius: 0px 0px 16px 16px;
