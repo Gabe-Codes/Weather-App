@@ -14,27 +14,38 @@
 }
 
 .info-fav {
-	top: 17vh;
-	right: 14vw;
-
+	top: calc(50% - 253px);
+	right: calc(50% - 220px);
 	color: yellow;
 }
 
 .info-loc {
-	top: 8vh;
-	right: 5vw;
-
-	color: lightgreen;
-}
-
-.info-met {
-	top: 30vh;
-	left: 8vw;
-
+	top: calc(50% - 325px);
+	right: calc(50% - 230px);
 	color: lightcoral;
 }
 
+.info-met {
+	top: calc(50% - 140px);
+	/* left: calc(50% - 220px); */
+	color: lightgreen;
+}
+
 .info-search {
-	top: 2.5vh;
-	left: 26vw;
+	top: calc(50% - 363px);
+	left: calc(50% - 125px);
+}
+
+@media (min-width: 650px) {
+	.info-toggle {
+		left: calc(50% - 323px);
+	}
+
+	.info-loc {
+		right: calc(50% - 300px);
+	}
+
+	.info-search {
+		left: calc(50% - 200px);
+	}
 }

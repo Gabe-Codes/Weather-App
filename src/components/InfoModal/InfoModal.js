@@ -6,6 +6,16 @@ export default class InfoModal extends Component {
 		showInfo: true,
 	};
 
+	componentDidUpdate() {
+		document.getElementById('info-met').style.left = `calc(50% - ${
+			this.props.tempSize() * 0.75
+		}px)`;
+
+		document.getElementById('info-fav').style.right = `calc(50% - ${
+			this.props.getTextWidth(this.props.location, '500 32pt montseratt') * 0.7
+		}px)`;
+	}
+
 	// changes the informative text and borders to show when the info icon is pressed
 	showInfo = (e) => {
 		this.state.showInfo === false
@@ -26,13 +36,13 @@ export default class InfoModal extends Component {
 			infoMet.style.display = 'block';
 			infoSearch.style.display = 'block';
 
-			locIcon.style.border = 'solid lightgreen 2px';
+			locIcon.style.border = 'solid lightcoral 2px';
 			locIcon.style.padding = '0px';
 
 			favIcon.style.border = 'solid yellow 2px';
 			favIcon.style.padding = '0px';
 
-			tempIcon.style.border = 'solid lightcoral 2px';
+			tempIcon.style.border = 'solid lightgreen 2px';
 			tempIcon.style.padding = '13px 23px';
 		} else {
 			infoFav.style.display = 'none';

@@ -227,7 +227,7 @@ export default class App extends Component {
 	};
 
 	// calls to check the temp text width based on the current metric
-	sizeCheck = () => {
+	tempSize = () => {
 		let impTemp = String(Math.round(this.state.weather.main.temp)) + '°F';
 
 		let metTemp =
@@ -248,7 +248,6 @@ export default class App extends Component {
 				}
 			>
 				<main>
-					<InfoModal />
 					<div id="search" className="search-box">
 						<input
 							type="text"
@@ -268,6 +267,16 @@ export default class App extends Component {
 					</div>
 					{typeof this.state.weather.main != 'undefined' ? (
 						<div>
+							<InfoModal
+								tempSize={this.tempSize}
+								getTextWidth={this.getTextWidth}
+								location={
+									this.state.weather.name +
+									'' +
+									this.state.weather.sys.country +
+									'     '
+								}
+							/>
 							<div className="location-box">
 								<div className="location">
 									{this.state.weather.name},{' '}
@@ -287,7 +296,7 @@ export default class App extends Component {
 									id="temp"
 									className="temp"
 									onClick={this.setUnit}
-									style={{ width: this.sizeCheck() + 'px' }}
+									style={{ width: this.tempSize() + 'px' }}
 								>
 									<TextTransition
 										text={this.switchUnits()}

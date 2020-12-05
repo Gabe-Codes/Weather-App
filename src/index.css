@@ -252,3 +252,9 @@ main {
 .attribution p {
 	display: inline;
 }
+
+@media (min-width: 650px) {
+	.search-box {
+		width: 594px;
+	}
+}
