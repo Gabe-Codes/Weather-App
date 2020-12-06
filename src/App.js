@@ -37,16 +37,21 @@ export default class App extends Component {
 
 	// on update adjusts temp and favorite info location to be responsive
 	componentDidUpdate() {
-		document.getElementById('info-met').style.left = `calc(50% - ${
-			this.tempSize() * 0.75
-		}px)`;
+		if (typeof this.state.weather.main != 'undefined') {
+			document.getElementById('info-met').style.left = `calc(50% - ${
+				this.tempSize() * 0.75
+			}px)`;
 
-		document.getElementById('info-fav').style.right = `calc(50% - ${
-			this.getTextWidth(
-				this.state.weather.name + '' + this.state.weather.sys.country + '     ',
-				'500 32pt montseratt'
-			) * 0.7
-		}px)`;
+			document.getElementById('info-fav').style.right = `calc(50% - ${
+				this.getTextWidth(
+					this.state.weather.name +
+						'' +
+						this.state.weather.sys.country +
+						'     ',
+					'500 32pt montseratt'
+				) * 0.7
+			}px)`;
+		}
 	}
 
 	// changes the informative text and borders to show when the info icon is pressed
