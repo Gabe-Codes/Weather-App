@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import TextTransition, { presets } from 'react-text-transition';
 import { timezones } from './timezones';
-import InfoModal from './components/InfoModal/InfoModal';
 
 // makes the openweather api easier to call
 const api = {
@@ -21,6 +20,7 @@ export default class App extends Component {
 			climate: '',
 			favoriteLoc: localStorage.getItem('favLoc'), // sets the saved cookie favorite location
 			favorited: false,
+			showInfo: true,
 		};
 	}
 
@@ -34,6 +34,62 @@ export default class App extends Component {
 			console.log(err);
 		}
 	}
+
+	// on update adjusts temp and favorite info location to be responsive
+	componentDidUpdate() {
+		document.getElementById('info-met').style.left = `calc(50% - ${
+			this.tempSize() * 0.75
+		}px)`;
+
+		document.getElementById('info-fav').style.right = `calc(50% - ${
+			this.getTextWidth(
+				this.state.weather.name + '' + this.state.weather.sys.country + '     ',
+				'500 32pt montseratt'
+			) * 0.7
+		}px)`;
+	}
+
+	// changes the informative text and borders to show when the info icon is pressed
+	showInfo = (e) => {
+		this.state.showInfo === false
+			? this.setState({ showInfo: true })
+			: this.setState({ showInfo: false });
+
+		let infoFav = document.getElementById('info-fav');
+		let infoLoc = document.getElementById('info-loc');
+		let infoMet = document.getElementById('info-met');
+		let locIcon = document.getElementById('curr-loc');
+		let favIcon = document.getElementById('fav-loc');
+		let tempIcon = document.getElementById('temp');
+
+		if (this.state.showInfo === true) {
+			infoFav.style.display = 'block';
+			infoLoc.style.display = 'block';
+			infoMet.style.display = 'block';
+
+			locIcon.style.border = 'solid lightcoral 2px';
+			locIcon.style.padding = '0px';
+
+			favIcon.style.border = 'solid yellow 2px';
+			favIcon.style.padding = '0px';
+
+			tempIcon.style.border = 'solid lightgreen 2px';
+			tempIcon.style.padding = '13px 23px';
+		} else {
+			infoFav.style.display = 'none';
+			infoLoc.style.display = 'none';
+			infoMet.style.display = 'none';
+
+			locIcon.style.border = 'none';
+			locIcon.style.padding = '2px';
+
+			favIcon.style.border = 'none';
+			favIcon.style.padding = '2px';
+
+			tempIcon.style.border = 'none';
+			tempIcon.style.padding = '15px 25px';
+		}
+	};
 
 	// gets users coordinates then fetchs the location
 	getUserLocation = (evt) => {
@@ -252,7 +308,11 @@ export default class App extends Component {
 						<input
 							type="text"
 							className="search-bar"
-							placeholder="Search..."
+							placeholder={
+								this.state.showInfo === true
+									? 'Search...'
+									: 'e.g. dallas or dallas, US'
+							}
 							onChange={(e) => this.setState({ query: e.target.value })}
 							value={this.state.query}
 							onKeyPress={this.search}
@@ -267,16 +327,31 @@ export default class App extends Component {
 					</div>
 					{typeof this.state.weather.main != 'undefined' ? (
 						<div>
-							<InfoModal
-								tempSize={this.tempSize}
-								getTextWidth={this.getTextWidth}
-								location={
-									this.state.weather.name +
-									'' +
-									this.state.weather.sys.country +
-									'     '
-								}
-							/>
+							<div>
+								<i
+									className="material-icons info-toggle"
+									onClick={this.showInfo}
+								>
+									info
+								</i>
+								<span id="info-fav" className="info info-fav">
+									set as
+									<br />
+									favorite
+								</span>
+								<span id="info-loc" className="info info-loc">
+									current
+									<br />
+									location
+								</span>
+								<span id="info-met" className="info info-met">
+									tap to
+									<br />
+									switch
+									<br />
+									metric
+								</span>
+							</div>
 							<div className="location-box">
 								<div className="location">
 									{this.state.weather.name},{' '}

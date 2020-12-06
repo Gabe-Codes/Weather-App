@@ -253,8 +253,57 @@ main {
 	display: inline;
 }
 
+.info {
+	position: absolute;
+	text-align: center;
+	display: none;
+}
+
+.info-toggle {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+
+	color: #fff;
+	cursor: pointer;
+}
+
+.info-fav {
+	top: calc(50% - 253px);
+	right: calc(50% - 220px);
+	color: yellow;
+}
+
+.info-loc {
+	top: 7.5%;
+	right: 4%;
+	color: lightcoral;
+}
+
+.info-met {
+	top: calc(50% - 140px);
+	color: lightgreen;
+}
+
 @media (min-width: 650px) {
 	.search-box {
 		width: 594px;
+	}
+
+	.welcome-box {
+		margin: 0 auto;
+		width: 649px;
+	}
+
+	.info-toggle {
+		left: calc(50% - 323px);
+	}
+
+	.info-loc {
+		right: calc(50% - 300px);
+	}
+
+	.info-search {
+		left: calc(50% - 200px);
 	}
 }
