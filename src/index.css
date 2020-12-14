@@ -269,19 +269,20 @@ main {
 }
 
 .info-fav {
-	top: calc(50% - 253px);
+	top: 16vh;
 	right: calc(50% - 220px);
 	color: yellow;
 }
 
 .info-loc {
-	top: 7.5%;
-	right: 4%;
+	top: 7vh;
+	right: 6vw;
 	color: lightcoral;
 }
 
 .info-met {
-	top: calc(50% - 140px);
+	top: 48vh;
+	right: 55vw;
 	color: lightgreen;
 }
 
@@ -305,5 +306,25 @@ main {
 
 	.info-search {
 		left: calc(50% - 200px);
+	}
+}
+
+@media (max-height: 650px) {
+	.info-fav {
+		top: 20vh;
+	}
+
+	.info-loc {
+		top: 8vh;
+	}
+
+	.info-met {
+		top: 56vh;
+	}
+}
+
+@media (min-height: 750px) and (max-width: 400px) {
+	.info-met {
+		top: 44vh;
 	}
 }
