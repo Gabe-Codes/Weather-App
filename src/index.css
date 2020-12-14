@@ -324,6 +324,10 @@ main {
 }
 
 @media (min-height: 750px) and (max-width: 400px) {
+	.weather-box .weather-animation {
+		background-size: 50vh;
+	}
+
 	.info-met {
 		top: 44vh;
 	}
